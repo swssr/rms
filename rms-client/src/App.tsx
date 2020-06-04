@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import Chart from "chart.js";
 
 const API_URL = "http://localhost:8080/api/data";
 
@@ -13,6 +14,7 @@ function App() {
 
   const [renderLimit, setRenderLimit] = useState(50);
 
+  //Fetch metering data from server
   useEffect(() => {
     fetch(API_URL).then((res) => res.json())
       .then(data => {
@@ -20,12 +22,47 @@ function App() {
       })
   }, [])
 
+  //Charts
+  const chartRef = useRef<HTMLCanvasElement>(null);
+  useEffect(() => {
 
+    const chartContext = chartRef.current?.getContext("2d");
+
+    if (!chartContext || !readings.length) return
+    const timeStamps = (query ? filtered : readings)
+      .slice(0, 50)
+      .map((v: MeterReading) => v.ReadingDateTimeUTC);
+
+    const meter01Data = readings.filter(v => v["Serial"] === "METER000001").slice(0, 50).map((v: MeterReading) => v.WH)
+    const meter02Data = readings.filter(v => v["Serial"] === "METER000002").slice(0, 50).map((v: MeterReading) => v.WH)
+
+    new Chart(chartContext, {
+      type: "line",
+      data: {
+        labels: timeStamps,
+        datasets: [
+          {
+            label: "METER000001",
+            data: meter01Data,
+            borderColor: "#00ff00",
+            fill: "#00ff00"
+          },
+          {
+            label: "METER000002",
+            data: meter02Data,
+            borderColor: "#ff0000",
+            fill: "#ff0000"
+          }
+        ],
+      }
+    })
+  }, [current, readings, filtered, query])
+
+  //Actions and event handlers
   const handleChange = (event: any) => {
     const _query = event.target.value.toLocaleLowerCase();
     setQuery(_query);
-    const _filtered = readings
-      .filter((value: MeterReading) => value["Serial"].toLowerCase().startsWith(_query))
+    const _filtered = findBySerial(_query, readings)
     setFiltered(_filtered)
   }
 
@@ -63,8 +100,10 @@ function App() {
             <div className="reading">{current?.WH}<span className="units">WH</span> | {current?.VARH}<span className="units">VARH</span></div>
             <div className="reading">{current?.ReadingDateTimeUTC}</div>
           </div>
-          <div className="chart">
-          </div>
+          <canvas
+            ref={chartRef}
+            className="chart">
+          </canvas>
           <button onClick={() => setOpen(false)} className="btn btn--primary">Close</button>
         </div>
       </dialog>
@@ -107,7 +146,21 @@ interface MeterReading {
   Serial: string;
   WH: number;
   VARH: number;
-  ReadingDateTimeUTC: Date;
+  ReadingDateTimeUTC: string;
+}
+
+//Utility functions
+function findBySerial(_query: string, list: any) {
+  return list
+    .filter((value: MeterReading) => value["Serial"].toLowerCase().startsWith(_query))
+}
+
+function withinRange(value: number, center: number, offset: number) {
+  const min = center - offset;
+  const max = center + offset;
+  if (value > max || value < min) { return false } else {
+    return true
+  }
 }
 
 export default App;
