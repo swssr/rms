@@ -1,5 +1,8 @@
 import React, { useState, useEffect, useRef } from 'react';
 import Chart from "chart.js";
+import { ListReadings } from './components/ListReadings';
+import { ChartDialog } from './components/ChartDialog';
+import { findByKey } from './utils/helpers';
 
 const API_URL = "http://localhost:8080/api/data";
 
@@ -33,26 +36,46 @@ function App() {
       .slice(0, 50)
       .map((v: MeterReading) => v.ReadingDateTimeUTC);
 
-    const meter01Data = readings.filter(v => v["Serial"] === "METER000001").slice(0, 50).map((v: MeterReading) => v.WH)
-    const meter02Data = readings.filter(v => v["Serial"] === "METER000002").slice(0, 50).map((v: MeterReading) => v.WH)
+    //WH Data
+    const meter01WHData = readings.filter(v => v["Serial"] === "METER000001").slice(0, 50).map((v: MeterReading) => v.WH)
+    const meter02WHData = readings.filter(v => v["Serial"] === "METER000002").slice(0, 50).map((v: MeterReading) => v.WH)
+
+    //VARH Data
+    const meter01VARHData = readings.filter(v => v["Serial"] === "METER000001").slice(0, 50).map((v: MeterReading) => v.VARH)
+    const meter02VARHData = readings.filter(v => v["Serial"] === "METER000002").slice(0, 50).map((v: MeterReading) => v.VARH)
 
     new Chart(chartContext, {
       type: "line",
       data: {
         labels: timeStamps,
         datasets: [
+          //Meter 1 readings
           {
-            label: "METER000001",
-            data: meter01Data,
+            label: "METER000001 WH",
+            data: meter01WHData,
             borderColor: "#00ff00",
             fill: "#00ff00"
           },
           {
-            label: "METER000002",
-            data: meter02Data,
+            label: "METER000001 VARH",
+            data: meter01VARHData,
+            borderColor: "#00ff00",
+            fill: "#00ff00"
+          },
+          //Meter 2 readings
+          {
+            label: "METER000002 WH",
+            data: meter02WHData,
+            borderColor: "#ff0000",
+            fill: "#ff0000"
+          },
+          {
+            label: "METER000002 VARH",
+            data: meter02VARHData,
             borderColor: "#ff0000",
             fill: "#ff0000"
           }
+
         ],
       }
     })
@@ -62,7 +85,7 @@ function App() {
   const handleChange = (event: any) => {
     const _query = event.target.value.toLocaleLowerCase();
     setQuery(_query);
-    const _filtered = findBySerial(_query, readings)
+    const _filtered = findByKey("Serial", _query, readings)
     setFiltered(_filtered)
   }
 
@@ -92,75 +115,22 @@ function App() {
           increaseRenderLimit={increaseRenderLimit}
         />
       </div>
-      <dialog
-        open={open}>
-        <div className="container">
-          <div className="container__head">
-            <h2 className="reading">{current?.Serial}</h2>
-            <div className="reading">{current?.WH}<span className="units">WH</span> | {current?.VARH}<span className="units">VARH</span></div>
-            <div className="reading">{current?.ReadingDateTimeUTC}</div>
-          </div>
-          <canvas
-            ref={chartRef}
-            className="chart">
-          </canvas>
-          <button onClick={() => setOpen(false)} className="btn btn--primary">Close</button>
-        </div>
-      </dialog>
+      <ChartDialog
+        open={open}
+        data={current}
+        handleClose={() => setOpen(false)}
+        chartRef={chartRef}
+      />
     </div>
   );
 }
 
-function ListReadings({ readings, onItemClick, renderLimit, increaseRenderLimit }: any) {
-  const _readings = readings.slice(0, renderLimit || 100);
-  return <>
-    <ol className="list">
-      <div className="sub-title">{readings.length} Historic meter reading</div>
-      <div className="sub-title">{_readings.length} Shown</div>
-      {!!_readings.length ? _readings.map((data: any) => (
-        <li
-          className="meter"
-          key={`${data.Serial}-${Math.random()}`}
-          onClick={() => onItemClick(data)}
-        >
-          <div className="meter__id">{data.Serial}</div>
-          <div className="meter__reading">{data.WH}<span className="units">WH</span> | {data.VARH}<span className="units">VARH</span></div>
-          <div className="meter__date">{data.ReadingDateTimeUTC}</div>
-        </li>
-      )) :
-        (
-          <div className="warning">Nothing to see here</div>
-        )
-      }
-    </ol>
-    {!!readings.length && readings.length > renderLimit && (
-      <button
-        className="btn"
-        onClick={() => increaseRenderLimit({ renderLimit, list: readings })}
-      >Load More...</button>
-    )}
-  </>
-}
-
+//Interfaces
 interface MeterReading {
   Serial: string;
   WH: number;
   VARH: number;
   ReadingDateTimeUTC: string;
-}
-
-//Utility functions
-function findBySerial(_query: string, list: any) {
-  return list
-    .filter((value: MeterReading) => value["Serial"].toLowerCase().startsWith(_query))
-}
-
-function withinRange(value: number, center: number, offset: number) {
-  const min = center - offset;
-  const max = center + offset;
-  if (value > max || value < min) { return false } else {
-    return true
-  }
 }
 
 export default App;

@@ -13,10 +13,10 @@ const MeterService = require("./meter.service");
 
 app.get("/api/data", async (req, res) => {
   await MeterService.GetReadings()
-    .then(() => {
+    .then((data) => {
       res.status(200).json(data || []);
     })
-    .catch(() => res.status(500).send({ error: "Whoops. Something, went terribly wrong!" }))
+    .catch(() => res.status(500).send({ error: "Sorry. Something, went terribly wrong with our servers." }))
 });
 
 /** Start server */
