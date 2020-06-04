@@ -8,7 +8,7 @@ Simple fullstack app to visual metering data from `NodeJS` server using `ReactJS
 
 - [x] parse csv to json
 - [x] setup cors
-- [x] serve to client
+- [x] serve to client as json
 
 ### Client
 
