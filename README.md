@@ -15,7 +15,7 @@ Simple fullstack app to visual metering data from `NodeJS` server using `ReactJS
 - [X] Fetch data from server.
 - [X] List meter readings
 - [X] Allow search using serial number
-- [] Use canvas based line graph for performance if possible.
-- [] Make it pretty!!!
+- [X] Use canvas based line graph for performance if possible.
+- [] Make it pretty!!! ✨✨
 
-* [] Deploy!!!!
+* [] Deploy!!!! 🎉🎉
