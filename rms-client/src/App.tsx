@@ -22,12 +22,14 @@ function App() {
 
 
   const handleChange = (event: any) => {
-    const _query = event.target.value;
+    const _query = event.target.value.toLocaleLowerCase();
     setQuery(_query);
+    const _filtered = readings
+      .filter((value: MeterReading) => value["Serial"].toLowerCase().startsWith(_query))
+    setFiltered(_filtered)
   }
 
   const handleItemClick = (data: any) => {
-    console.log("Item click!!!", { data })
     setOpen(true);
     setCurrent(data);
   }
@@ -47,8 +49,7 @@ function App() {
           placeholder="ENTER METER SERIAL"
         />
         <ListReadings
-          readings={readings}
-          filtered={filtered}
+          readings={query ? filtered : readings}
           renderLimit={renderLimit}
           onItemClick={handleItemClick}
           increaseRenderLimit={increaseRenderLimit}
