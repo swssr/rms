@@ -28,13 +28,14 @@ body, html{
   background-color: #fefefe;
 }
 .nav{
-  display: flex;
-  align-items: center;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
-  padding: 1rem;
+  padding: 1rem 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
   gap: 2rem;
   background-color: rgba(255, 255, 255, 0.747);
   z-index: 10;
@@ -48,7 +49,7 @@ body, html{
 .input{
   --w: 70vw;
   outline: none;
-  border: 2px solid rgba(0, 55, 85, 0.178);
+  border: 2px solid rgba(0, 55, 85, 0);
   padding: 1rem;
   text-indent: 32px;
   width: var(--w);
@@ -102,7 +103,7 @@ body, html{
 
 /**3. Meter Reading list***/
 .list{
-  margin-top: 12vh;
+  margin-top: 18vh;
   padding: 0 1rem;
   animation: slide-up ease-out 500ms;
 }
@@ -140,12 +141,14 @@ body, html{
   z-index: -1;
 }
 .meter__id{
-  color: rgb(51, 49, 49);
-  font-size: 16px;
+  color: var(--color-dark-blue);
+  font-size: 14px;
+  margin-bottom: 8px;
 }
 .meter__reading{
   font-size: 18px;
   font-weight: 600;
+  margin-bottom: 8px;
 }
 .units{
   font-size: 10px;
