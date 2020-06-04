@@ -42,6 +42,7 @@ function App() {
         <ListReadings
           readings={readings}
           filtered={filtered}
+          renderLimit={50}
           onItemClick={handleItemClick} />
       </div>
       <dialog
@@ -59,7 +60,7 @@ function App() {
 
 function ListReadings({ readings, onItemClick, renderLimit }: any) {
   return <ul className="list">
-    {!!readings.length ? readings.map((data: any) => (
+    {!!readings.length ? readings.slice(0, renderLimit || 100).map((data: any) => (
       <li
         className="meter"
         key={`${data.Serial}-${Math.random()}`}
