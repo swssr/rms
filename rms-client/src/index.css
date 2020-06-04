@@ -18,6 +18,7 @@ dialog{
   background-color: red;
 
   animation: slide-up 500ms ease-out;
+  z-index: 999;
 }
 .input{
   --w: 70vw;
@@ -41,6 +42,7 @@ dialog{
 .input--prominent{
   position: fixed;
   left: calc(50vw - var(--w) / 2);
+  z-index: 10;
 }
 .btn{
   outline: none;
@@ -54,16 +56,35 @@ dialog{
 }
 .list{
   margin-top: 12vh;
+  padding: 0 1rem;
 }
-
+.sub-title{
+  font-size: 14px;
+  color: rgba(0,0,0,0.68);
+  margin-left: 1rem;
+}
 .meter{
   display: grid;
   padding: 1rem;
-  width: 98%;
+  width: 100%;
   background-color: #f4f4f4;
+  border: 2px solid rgba(41, 41, 41, 0.13);
   margin: .5rem auto;
-  outline: 1px solid;
   cursor: pointer;
+  transform: scale(0.99);
+
+  transition: all ease-out 500ms;
+}
+.meter:hover{
+  transform: scale(1);
+  box-shadow: 0 0 10px rgba(41, 41, 41, 0.13);
+  z-index: 2;
+}
+.list:hover .meter:not(:hover){
+  filter: grayscale(1);
+  opacity: 0.76;
+  transition: ease-out all 500ms;
+  z-index: -1;
 }
 .meter__id{
   color: rgb(51, 49, 49);
