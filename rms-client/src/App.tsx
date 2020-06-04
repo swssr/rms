@@ -102,12 +102,19 @@ function App() {
   return (
     <div className="App">
       <div className="container">
-        <input
-          type="text"
-          onChange={handleChange}
-          className="input input--prominent"
-          placeholder="ENTER METER SERIAL"
-        />
+        <nav className="nav">
+          <a href="/" className="link">
+            <img src="https://res.cloudinary.com/swssr/image/upload/v1591310316/uc9nxnzrgxufivtwz7me.png" alt="rms logo" className="img img--logo" />
+          </a>
+          <div className="input-wrapper">
+            <input
+              type="text"
+              onChange={handleChange}
+              className="input input--prominent"
+              placeholder="ENTER METER SERIAL"
+            />
+          </div>
+        </nav>
         <ListReadings
           readings={query ? filtered : readings}
           renderLimit={renderLimit}

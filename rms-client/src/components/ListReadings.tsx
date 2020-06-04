@@ -3,8 +3,10 @@ export function ListReadings({ readings, onItemClick, renderLimit, increaseRende
   const _readings = readings.slice(0, renderLimit || 100);
   return <>
     <ol className="list">
-      <div className="sub-title">{readings.length} Historic meter reading</div>
-      <div className="sub-title">{_readings.length} Shown</div>
+      <div className="list-stats">
+        <div className="sub-title">{readings.length} Readings</div>
+        <div className="sub-title">{_readings.length} Shown</div>
+      </div>
       {!!_readings.length ? _readings.map((data: any) => (
         <li
           className="meter"
