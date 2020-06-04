@@ -6,7 +6,7 @@ function App() {
   const [readings, setReadings] = useState([]);
   const [filtered, setFiltered] = useState([]);
 
-  const [current, setCurrent] = useState({ Serial: "", WV: "", VARH: "", ReadingDateTimeUTC: "" });
+  const [current, setCurrent] = useState({ Serial: "", WH: "", VARH: "", ReadingDateTimeUTC: "" });
   const [query, setQuery] = useState("");
 
   const [open, setOpen] = useState(false);
@@ -29,7 +29,7 @@ function App() {
   const handleItemClick = (data: any) => {
     console.log("Item click!!!", { data })
     setOpen(true);
-    // setCurrent(data);
+    setCurrent(data);
   }
 
   const increaseRenderLimit = ({ renderLimit, list }: any) => {
@@ -46,7 +46,6 @@ function App() {
           className="input input--prominent"
           placeholder="ENTER METER SERIAL"
         />
-
         <ListReadings
           readings={readings}
           filtered={filtered}
@@ -56,13 +55,17 @@ function App() {
         />
       </div>
       <dialog
-        open={open}
-        className="container container--dialog">
-        <h2>{current.Serial}</h2>
-        <div className="chart">
-          Lorem ipsum, dolor sit amet consectetur adipisicing elit. Harum incidunt inventore, sit totam quis explicabo eaque earum est nesciunt distinctio iure nam eius enim fugiat praesentium dolorem consectetur id reiciendis.
+        open={open}>
+        <div className="container">
+          <div className="container__head">
+            <h2 className="reading">{current?.Serial}</h2>
+            <div className="reading">{current?.WH}<span className="units">WH</span> | {current?.VARH}<span className="units">VARH</span></div>
+            <div className="reading">{current?.ReadingDateTimeUTC}</div>
+          </div>
+          <div className="chart">
+          </div>
+          <button onClick={() => setOpen(false)} className="btn btn--primary">Close</button>
         </div>
-        <button onClick={() => setOpen(false)} className="btn btn--primary">Close</button>
       </dialog>
     </div>
   );
@@ -81,7 +84,7 @@ function ListReadings({ readings, onItemClick, renderLimit, increaseRenderLimit 
           onClick={() => onItemClick(data)}
         >
           <div className="meter__id">{data.Serial}</div>
-          <div className="meter__reading">{data.WH}WH | {data.VARH}VARH</div>
+          <div className="meter__reading">{data.WH}<span className="units">WH</span> | {data.VARH}<span className="units">VARH</span></div>
           <div className="meter__date">{data.ReadingDateTimeUTC}</div>
         </li>
       )) :
