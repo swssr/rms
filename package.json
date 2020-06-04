@@ -1,0 +1,21 @@
+{
+  "name": "rms",
+  "version": "0.0.1",
+  "workspaces": [
+    "rms-client",
+    "rms-server"
+  ],
+  "description": "rms metering data server and visualizer",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "rms",
+    "metering",
+    "reactjs",
+    "nodejs"
+  ],
+  "author": "Simo Ngquseka",
+  "license": "ISC"
+}
