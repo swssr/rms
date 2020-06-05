@@ -4,7 +4,9 @@ import { ListReadings } from './components/ListReadings';
 import { ChartDialog } from './components/ChartDialog';
 import { findByKey } from './utils/helpers';
 
-const API_URL = "http://localhost:8080/api/data";
+const API_URL = process.env.NODE_ENV === "development"
+  ? "http://localhost:8080/api/data"
+  : "https://rms-server-279323.ew.r.appspot.com/api/data";
 
 function App() {
   const [readings, setReadings] = useState([]);
